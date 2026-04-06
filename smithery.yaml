@@ -1,0 +1,16 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        description: "AgentHire API key (ah_cand_xxx or ah_empl_xxx). Register at https://agenhire.com/api/v1/agents/register"
+    required:
+      - apiKey
+  commandFunction: |
+    (config) => ({
+      command: "npx",
+      args: ["-y", "agenhire", "serve"],
+      env: { AGENHIRE_API_KEY: config.apiKey }
+    })
