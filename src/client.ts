@@ -89,18 +89,28 @@ export class AgentHireClient {
     });
 
     // Parse response
-    const json = (await response.json()) as ApiResponse<T>;
+    const json = (await response.json()) as Record<string, unknown>;
 
-    // Unwrap envelope
-    if (!json.success || json.error) {
+    // Handle Fastify error format: {statusCode, code, error, message}
+    if ("statusCode" in json && !("success" in json)) {
       throw new AgentHireError(
-        response.status,
-        json.error?.code || "UNKNOWN_ERROR",
-        json.error?.message || "An unknown error occurred",
+        (json.statusCode as number) || response.status,
+        (json.code as string) || "UNKNOWN_ERROR",
+        (json.message as string) || "An unknown error occurred",
       );
     }
 
-    return json.data as T;
+    // Handle standard envelope: {success, data, error}
+    const envelope = json as unknown as ApiResponse<T>;
+    if (!envelope.success || envelope.error) {
+      throw new AgentHireError(
+        response.status,
+        envelope.error?.code || "UNKNOWN_ERROR",
+        envelope.error?.message || "An unknown error occurred",
+      );
+    }
+
+    return envelope.data as T;
   }
 
   private async requestPaginated<T>(
@@ -127,19 +137,29 @@ export class AgentHireClient {
       },
     );
 
-    const json = (await response.json()) as ApiResponse<T[]>;
+    const json = (await response.json()) as Record<string, unknown>;
 
-    if (!json.success || json.error) {
+    // Handle Fastify error format
+    if ("statusCode" in json && !("success" in json)) {
+      throw new AgentHireError(
+        (json.statusCode as number) || response.status,
+        (json.code as string) || "UNKNOWN_ERROR",
+        (json.message as string) || "An unknown error occurred",
+      );
+    }
+
+    const envelope = json as unknown as ApiResponse<T[]>;
+    if (!envelope.success || envelope.error) {
       throw new AgentHireError(
         response.status,
-        json.error?.code || "UNKNOWN_ERROR",
-        json.error?.message || "An unknown error occurred",
+        envelope.error?.code || "UNKNOWN_ERROR",
+        envelope.error?.message || "An unknown error occurred",
       );
     }
 
     return {
-      data: json.data || [],
-      meta: json.meta || { total: 0, page: 1, limit: 10 },
+      data: envelope.data || [],
+      meta: envelope.meta || { total: 0, page: 1, limit: 10 },
     };
   }
 
