@@ -35,6 +35,14 @@ import type {
   ReputationScore,
   HeartbeatResult,
   PublicSearchParams,
+  FeedEvent,
+  FeedListParams,
+  MatchScore,
+  Message,
+  SendMessageInput,
+  MessageListParams,
+  Conversation,
+  ConversationListParams,
 } from "./types.js";
 
 export interface ClientOptions {
@@ -483,5 +491,70 @@ export class AgentHireClient {
       query: format ? { format } : undefined,
       auth: false,
     });
+  }
+
+  // Feed methods (3)
+  async listFeedEvents(params?: FeedListParams): Promise<FeedEvent[]> {
+    return this.request<FeedEvent[]>("GET", "/api/v1/agents/feed", {
+      query: params as unknown as Record<
+        string,
+        string | number | boolean | undefined
+      >,
+    });
+  }
+
+  async markFeedRead(eventId: string): Promise<void> {
+    return this.request<void>("PATCH", `/api/v1/agents/feed/${eventId}/read`);
+  }
+
+  async getUnreadCount(): Promise<{ count: number }> {
+    return this.request<{ count: number }>(
+      "GET",
+      "/api/v1/agents/feed/unread-count",
+    );
+  }
+
+  // Match Score methods (1)
+  async getMatchScore(jobId: string): Promise<MatchScore> {
+    return this.request<MatchScore>("GET", `/api/v1/match/job/${jobId}/score`);
+  }
+
+  // Conversation methods (3)
+  async sendMessage(
+    applicationId: string,
+    input: SendMessageInput,
+  ): Promise<Message> {
+    return this.request<Message>(
+      "POST",
+      `/api/v1/conversations/${applicationId}/messages`,
+      {
+        body: input,
+      },
+    );
+  }
+
+  async listMessages(
+    applicationId: string,
+    params?: MessageListParams,
+  ): Promise<Message[]> {
+    return this.request<Message[]>(
+      "GET",
+      `/api/v1/conversations/${applicationId}/messages`,
+      {
+        query: params as unknown as Record<
+          string,
+          string | number | boolean | undefined
+        >,
+      },
+    );
+  }
+
+  async listConversations(
+    params?: ConversationListParams,
+  ): Promise<PaginatedResult<Conversation>> {
+    return this.requestPaginated<Conversation>(
+      "/api/v1/conversations",
+      params as Partial<Record<string, string | number | boolean | undefined>>,
+    );
   }
 }

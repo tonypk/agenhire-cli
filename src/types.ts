@@ -25,7 +25,7 @@ export interface PaginatedResult<T> {
 // Agent
 export interface Agent {
   id: string;
-  type: 'CANDIDATE' | 'EMPLOYER';
+  type: "CANDIDATE" | "EMPLOYER";
   lang: string;
   countryCode: string;
   ownerEmail?: string;
@@ -37,7 +37,7 @@ export interface Agent {
 }
 
 export interface RegisterInput {
-  type: 'CANDIDATE' | 'EMPLOYER';
+  type: "CANDIDATE" | "EMPLOYER";
   countryCode: string;
   lang?: string;
   ownerEmail?: string;
@@ -83,7 +83,7 @@ export interface IntentJson {
   skills?: string[];
   desiredRoles?: string[];
   industries?: string[];
-  experienceLevel?: 'JUNIOR' | 'MID' | 'SENIOR' | 'LEAD' | 'EXECUTIVE';
+  experienceLevel?: "JUNIOR" | "MID" | "SENIOR" | "LEAD" | "EXECUTIVE";
 }
 
 export interface UpdateCandidateInput {
@@ -151,7 +151,7 @@ export interface Job {
 export interface CreateJobInput {
   title: string;
   description: Record<string, unknown>;
-  workArrangement: 'ON_SITE' | 'HYBRID' | 'FULL_REMOTE' | 'REMOTE_FRIENDLY';
+  workArrangement: "ON_SITE" | "HYBRID" | "FULL_REMOTE" | "REMOTE_FRIENDLY";
   coreHours?: Record<string, unknown>;
   salaryMin: number;
   salaryMax: number;
@@ -223,7 +223,7 @@ export interface CreateInterviewInput {
 }
 
 export interface ScoreInterviewInput {
-  outcome: 'PASS' | 'FAIL';
+  outcome: "PASS" | "FAIL";
   feedback?: Record<string, unknown>;
 }
 
@@ -246,7 +246,7 @@ export interface CreateOfferInput {
   applicationId: string;
   salary: number;
   currency: string;
-  workArrangement: 'ON_SITE' | 'HYBRID' | 'FULL_REMOTE' | 'REMOTE_FRIENDLY';
+  workArrangement: "ON_SITE" | "HYBRID" | "FULL_REMOTE" | "REMOTE_FRIENDLY";
   startDate?: string;
   conditions?: Record<string, unknown>;
   expiresInDays?: number;
@@ -294,8 +294,8 @@ export interface Deposit {
 
 export interface CreateDepositInput {
   jobId?: string;
-  currency: 'USDC' | 'USDT';
-  chain?: 'polygon' | 'ethereum' | 'tron';
+  currency: "USDC" | "USDT";
+  chain?: "polygon" | "ethereum" | "tron";
   amount: number;
 }
 
@@ -313,7 +313,7 @@ export interface ComplianceTip {
 }
 
 export interface ComplianceParams {
-  trigger: 'job_creation' | 'application' | 'offer_creation' | 'cross_border';
+  trigger: "job_creation" | "application" | "offer_creation" | "cross_border";
   jobCountry?: string;
   employerCountry?: string;
   candidateCountry?: string;
@@ -349,6 +349,77 @@ export interface PublicSearchParams extends PaginationParams {
   country?: string;
   workArrangement?: string;
   q?: string;
+}
+
+// Feed
+export interface FeedEvent {
+  id: string;
+  type: string;
+  title: string;
+  summary: string;
+  resourceType?: string;
+  resourceId?: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface FeedListParams {
+  types?: string;
+  unreadOnly?: boolean;
+  limit?: number;
+  before?: string;
+}
+
+// Match Score
+export interface MatchScoreBreakdown {
+  skills: number;
+  experience: number;
+  salary: number;
+  location: number;
+  culture: number;
+}
+
+export interface MatchScore {
+  jobId: string;
+  score: number;
+  breakdown: MatchScoreBreakdown;
+  recommendation: string;
+}
+
+// Conversations
+export interface Message {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  intent: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface SendMessageInput {
+  intent: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface MessageListParams {
+  limit?: number;
+  before?: string;
+}
+
+export interface Conversation {
+  id: string;
+  applicationId: string;
+  participants: string[];
+  status: string;
+  lastMessageAt?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConversationListParams extends PaginationParams {
+  status?: string;
 }
 
 // Sandbox

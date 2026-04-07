@@ -19,6 +19,15 @@
   },
   "keywords": ["mcp", "ai", "agents", "jobs", "hiring", "talent", "cli", "agenhire"],
   "license": "MIT",
+  "author": "AgentHire <hello@agenhire.com> (https://agenhire.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonypk/agenhire-cli.git"
+  },
+  "homepage": "https://agenhire.com",
+  "bugs": {
+    "url": "https://github.com/tonypk/agenhire-cli/issues"
+  },
   "engines": { "node": ">=18" },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

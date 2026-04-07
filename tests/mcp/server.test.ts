@@ -142,7 +142,46 @@ describe("MCP tool registration", () => {
     expect(toolNames).toContain("public_talent_get");
   });
 
-  it("registers at least 40 tools total", async () => {
+  it("registers feed tools with correct names", async () => {
+    const { registerFeedTools } = await import("../../src/mcp/tools/feed.js");
+    const mockServer = { tool: vi.fn() };
+    registerFeedTools(mockServer as any, {} as any);
+    const toolNames = mockServer.tool.mock.calls.map((c: any[]) => c[0]);
+    expect(toolNames).toContain("feed_list");
+    expect(toolNames).toContain("feed_mark_read");
+    expect(toolNames).toContain("feed_unread_count");
+  });
+
+  it("registers match score tools with correct names", async () => {
+    const { registerMatchScoreTools } =
+      await import("../../src/mcp/tools/match-score.js");
+    const mockServer = { tool: vi.fn() };
+    registerMatchScoreTools(mockServer as any, {} as any);
+    const toolNames = mockServer.tool.mock.calls.map((c: any[]) => c[0]);
+    expect(toolNames).toContain("match_score_get");
+  });
+
+  it("registers conversation tools with correct names", async () => {
+    const { registerConversationTools } =
+      await import("../../src/mcp/tools/conversations.js");
+    const mockServer = { tool: vi.fn() };
+    registerConversationTools(mockServer as any, {} as any);
+    const toolNames = mockServer.tool.mock.calls.map((c: any[]) => c[0]);
+    expect(toolNames).toContain("conversation_send_message");
+    expect(toolNames).toContain("conversation_list_messages");
+    expect(toolNames).toContain("conversation_list");
+  });
+
+  it("registers reputation tools with correct names", async () => {
+    const { registerReputationTools } =
+      await import("../../src/mcp/tools/reputation.js");
+    const mockServer = { tool: vi.fn() };
+    registerReputationTools(mockServer as any, {} as any);
+    const toolNames = mockServer.tool.mock.calls.map((c: any[]) => c[0]);
+    expect(toolNames).toContain("reputation_get");
+  });
+
+  it("registers at least 49 tools total", async () => {
     const { registerAgentTools } = await import("../../src/mcp/tools/agent.js");
     const { registerEmployerTools } =
       await import("../../src/mcp/tools/employer.js");
@@ -165,6 +204,13 @@ describe("MCP tool registration", () => {
       await import("../../src/mcp/tools/approval.js");
     const { registerPublicTools } =
       await import("../../src/mcp/tools/public.js");
+    const { registerFeedTools } = await import("../../src/mcp/tools/feed.js");
+    const { registerMatchScoreTools } =
+      await import("../../src/mcp/tools/match-score.js");
+    const { registerConversationTools } =
+      await import("../../src/mcp/tools/conversations.js");
+    const { registerReputationTools } =
+      await import("../../src/mcp/tools/reputation.js");
 
     const mockServer = { tool: vi.fn() };
     const client = {} as any;
@@ -181,8 +227,12 @@ describe("MCP tool registration", () => {
     registerComplianceTools(mockServer as any, client);
     registerApprovalTools(mockServer as any, client);
     registerPublicTools(mockServer as any, client);
+    registerFeedTools(mockServer as any, client);
+    registerMatchScoreTools(mockServer as any, client);
+    registerConversationTools(mockServer as any, client);
+    registerReputationTools(mockServer as any, client);
 
-    expect(mockServer.tool.mock.calls.length).toBeGreaterThanOrEqual(40);
+    expect(mockServer.tool.mock.calls.length).toBeGreaterThanOrEqual(49);
   });
 
   it("all tool names follow snake_case with domain prefix pattern", async () => {
@@ -208,6 +258,13 @@ describe("MCP tool registration", () => {
       await import("../../src/mcp/tools/approval.js");
     const { registerPublicTools } =
       await import("../../src/mcp/tools/public.js");
+    const { registerFeedTools } = await import("../../src/mcp/tools/feed.js");
+    const { registerMatchScoreTools } =
+      await import("../../src/mcp/tools/match-score.js");
+    const { registerConversationTools } =
+      await import("../../src/mcp/tools/conversations.js");
+    const { registerReputationTools } =
+      await import("../../src/mcp/tools/reputation.js");
 
     const mockServer = { tool: vi.fn() };
     const client = {} as any;
@@ -224,6 +281,10 @@ describe("MCP tool registration", () => {
     registerComplianceTools(mockServer as any, client);
     registerApprovalTools(mockServer as any, client);
     registerPublicTools(mockServer as any, client);
+    registerFeedTools(mockServer as any, client);
+    registerMatchScoreTools(mockServer as any, client);
+    registerConversationTools(mockServer as any, client);
+    registerReputationTools(mockServer as any, client);
 
     const toolNames = mockServer.tool.mock.calls.map((c: any[]) => c[0]);
     const pattern = /^[a-z]+_[a-z_]+$/;
