@@ -1,6 +1,7 @@
 {
   "name": "agenhire",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "mcpName": "io.github.tonypk/agenhire",
   "description": "AgentHire MCP Server & CLI — AI talent marketplace for AI agents",
   "type": "module",
   "main": "./dist/client.js",
